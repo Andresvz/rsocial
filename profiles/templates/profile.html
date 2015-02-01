@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    {% load staticfiles %}
+    <!-- Styles -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+
+  </head>
+  <body>
+  	<div class="navbar navbar-inverse ">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="index.html" class="navbar-brand"><strong>R social</strong></a>
+            </div>
+
+            <div class="collapse navbar-collapse navbar-ex1-collapse" role="navigation">
+                <ul class="nav navbar-nav navbar-right">
+                    <ul class="nav nav-pills" role="tablist">
+					  <li role="presentation" class="active"><a href="/{{userprofile.user.username}}/">Profile</a></li>
+					  <li role="presentation"><a href="#">Messages <span class="badge">3</span></a></li>
+					  <li role="presentation"><a href="cerrar/">Salir</a></li>
+					</ul>        
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+    	<div class="row">
+    		<div class="col-md-4">
+    			<h3>{{userprofile.user.username}} <span class="label label-default">{{age}}</span></h3>
+	    		<div style="width: 100%; margin: 0 auto;">
+			        <figure style="text-align: left;">
+			            <img src="{{MEDIA_URL}}{{ userprofile.avatar }}" alt="{{ userprofile.user.username }}"/>
+			        </figure>
+		    	</div>
+    		</div>
+    		<div class="col-md-8">
+    			<dl class="dl-horizontal">
+				  <dt>First name:</dt>
+				  <dd>{{userprofile.first_name}}</dd>
+				</dl>
+                <dl class="dl-horizontal">
+                  <dt>Last name:</dt>
+                  <dd>{{userprofile.last_name}}</dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Date of birth:</dt>
+                  <dd>{{userprofile.date_birth}}</dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Gender:</dt>
+                  <dd>{{userprofile.gender}}</dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Sexual preference:</dt>
+                  <dd>{{userprofile.sexual_preference}}</dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Country:</dt>
+                  <dd>{{userprofile.country}}</dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>About me:</dt>
+                  <dd>{{userprofile.about_me}}</dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Relationship status:</dt>
+                  <dd>{{userprofile.relationship_status}}</dd>
+                </dl>
+    		</div>
+    	</div>
+    	<div class="row">
+    		
+    	</div>
+    </div>
+
+	
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+  </body>
+</html>
+
+
+
