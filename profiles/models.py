@@ -14,4 +14,4 @@ class UserProfile(models.Model):
 	user = models.OneToOneField(User)
 
 	def __str__(self):
-		return self.user.username
+		return self.user.username #+ " - id:" + str(self.id) + " - user_id:" + str(self.user_id)

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+ 
+{% block content %}
+	<p>Are you sure?</p>
+
+    <form action="."
+            method="post" accept-charset="utf-8">
+            {% csrf_token %}
+        <p><input type="submit" value="Delete &rarr;"></p>
+    </form>
+
+    <p><a href="<a href="/{{userprofile.user.username}}/">Return</a>
+{% endblock %}

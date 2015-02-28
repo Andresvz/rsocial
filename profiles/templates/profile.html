@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 {% load staticfiles %}
 
 {% block content %}
@@ -74,12 +74,21 @@
     		</div>
         <div class="col-md-4 ">
           <div>
+          {% if is_buddy == False %}
+            <a href="/{{userprofile.user.username}}/addbuddy/{{userprofile.id}}/" class="btn btn-primary" role="button">
+              <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Add Buddy
+            </a>
+            <!--  button boostrap for forms 
             <button type="button" class="btn btn-primary">
               <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Add Buddy
-            </button>
-            <button type="button" class="btn btn-danger">
+            </button> -->
+          {% elif is_buddy == True %}
+            <a href="/{{userprofile.user.username}}/delbuddy/{{subscription_id}}/" class="btn btn-danger" role="button">
               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete Buddy
-            </button>
+            </a>
+          {% else %}
+
+          {% endif %}
           </div>
           <div><br></div>
         
