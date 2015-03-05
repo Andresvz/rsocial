@@ -74,19 +74,24 @@
     		</div>
         <div class="col-md-4 ">
           <div>
-          {% if is_buddy == False %}
-            <a href="/{{userprofile.user.username}}/addbuddy/{{userprofile.id}}/" class="btn btn-primary" role="button">
-              <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Add Buddy
-            </a>
-            <!--  button boostrap for forms 
-            <button type="button" class="btn btn-primary">
-              <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Add Buddy
-            </button> -->
-          {% elif is_buddy == True %}
+          {% if is_buddy == 'A' %}
             <a href="/{{userprofile.user.username}}/delbuddy/{{subscription_id}}/" class="btn btn-danger" role="button">
               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete Buddy
             </a>
+          {% elif is_buddy == 'B' %}
+            <a href="/{{userprofile.user.username}}/acceptbuddy/{{userprofile.id}}/" class="btn btn-primary" role="button">
+              <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Accept Request
+            </a>
+          {% elif is_buddy == 'C' %}
+            <a href="/{{userprofile.user.username}}/addbuddy/{{userprofile.id}}/" class="btn btn-primary" role="button" disabled="disabled">
+              <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Request Sent
+            </a>
+          {% elif is_buddy == 'D' %}
+            <a href="/{{userprofile.user.username}}/addbuddy/{{userprofile.id}}/" class="btn btn-primary" role="button">
+              <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Add Buddy
+            </a>
           {% else %}
+
 
           {% endif %}
           </div>

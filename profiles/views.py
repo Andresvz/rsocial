@@ -5,8 +5,9 @@ from buddies.models import Subscription
 from datetime import date
 from django.contrib.auth.models import User
 from django.db.models import Q
+from profiles.mixins import UserIdProfileMixin
 
-class ProfileView(DetailView):
+class ProfileView(UserIdProfileMixin, DetailView):
 	model = UserProfile
 	template_name = 'profile.html'
 	slug_url_kwarg = 'username'
@@ -27,7 +28,7 @@ class ProfileView(DetailView):
 		# obteniendo el id de subcription donde el usuario logueado este relacionado con el usuario del perfil visto
 		subscription_id = self.get_subscription_id(userpro.id)
 		# 
-		is_buddy = self.validate_friendship(list_buddies, userpro.user.id)
+		is_buddy = self.validate_friendship(userpro.id)
 		# actualizando el diccionario context.
 		# Updating the context dictionary.
 		context.update({'age': age,'buddies': buddies,'is_buddy': is_buddy, 'subscription_id': subscription_id})
@@ -49,28 +50,30 @@ class ProfileView(DetailView):
 		else:
 			return today.year - date_birth.year
 
-	def validate_friendship(self,list_buddies, userid):
+
+	def validate_friendship(self, userproid):
 		''' check the user profile is friend or not '''
 
-		userlog_id = UserProfile.objects.filter(user = self.request.user.id).values('id')
-		for i in userlog_id:
-			userlog_id = i['id']
+		userlog_id = self.get_user_id_profile() 
 
-			# el perfil debe ser diferente al del usuario logueado
-			# profile should be different from the logged user
-			if userid != self.request.user.id:
-				if list_buddies:
-					for k in list_buddies:
-						# verificar el usuario logueado esta la lista de ids
-						if k == userlog_id:
-							return True
-							break
-						else:
-							return False
+		buddy = self.get_subscription(userproid,userlog_id, True)
+		buddy_request = self.get_subscription_request(userproid,userlog_id)
+		print (buddy_request)
+
+		# el perfil debe ser diferente al del usuario logueado
+		# profile should be different from the logged user
+		if userproid != userlog_id:
+			if buddy:
+				return 'A'
+			elif buddy_request:
+				if buddy_request == 'you_to_me':
+					return 'B'
 				else:
-					return False
+					return 'C'
 			else:
-				return None	
+				return 'D'
+		else:
+			return None 
 
 	
 	def get_subscription_list(self, userproid):
@@ -83,25 +86,37 @@ class ProfileView(DetailView):
 		listbud2 = Subscription.objects.filter(Q(sub_users = userproid) & Q(status = True)).values('user')
 		for i in listbud2:
 			list_buddies.append(i['user'])
+
 		return list_buddies
 
-	def get_subscription_request(self, userproid):
-		list_request_buddies = []
 
-		listbud = Subscription.objects.filter(Q(user = userproid) & Q(status = True)).values('sub_users')
-		for i in listbud:
-			list_request_buddies.append(i['sub_users'])
+	def get_subscription(self, userproid, userlog_id, status):
 
-		listbud2 = Subscription.objects.filter(Q(sub_users = userproid) & Q(status = True)).values('user')
-		for i in listbud2:
-			list_buddies.append(i['user'])
-		return list_buddies
+		value = Subscription.objects.filter(
+					Q( Q(user = userproid) & Q(sub_users = userlog_id) & Q(status = status) ) | 
+		 			Q( Q(user = userlog_id) & Q(sub_users = userproid) & Q(status = status) ) )
+		
+		return value
+
+	def get_subscription_request(self, userproid, userlog_id):
+
+		value = Subscription.objects.filter(
+					Q( Q(user = userproid) & Q(sub_users = userlog_id) & Q(status = False) ) )
+
+		if value:
+			return 'you_to_me'
+		else:
+			value = Subscription.objects.filter(
+					Q( Q(user = userlog_id) & Q(sub_users = userproid) & Q(status = False) ) )
+			if value:
+				return 'me_to_you'
+			else:
+				return value
+
 
 	def get_subscription_id(self,userproid):
 
-		userlog_id = UserProfile.objects.filter(user = self.request.user.id).values('id')
-		for i in userlog_id:
-			userlog_id = i['id']
+		userlog_id = self.get_user_id_profile() 
 
 		subscription_id = Subscription.objects.filter(Q(user = userproid)  & 
 							Q(sub_users = userlog_id) & Q(status = True)).values('id')
@@ -109,12 +124,11 @@ class ProfileView(DetailView):
 		if not subscription_id:
 			subscription_id = Subscription.objects.filter(Q(user = userlog_id)  & 
 							Q(sub_users= userproid) & Q(status = True)).values('id')
+		
 		for i in subscription_id:
 			subscription_id = i['id']
 
 		return subscription_id
-
-
 
 
 
